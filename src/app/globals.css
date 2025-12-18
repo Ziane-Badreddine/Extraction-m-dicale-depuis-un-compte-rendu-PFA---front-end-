@@ -182,3 +182,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+* {
+  --sb-track-color: var(--sidebar);
+  --sb-thumb-color: var(--color-primary);
+  --sb-size: 7px;
+}
+
+*::-webkit-scrollbar {
+  width: var(--sb-size);
+  height: var(--sb-size);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 1px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 1px;
+}
