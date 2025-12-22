@@ -14,7 +14,8 @@ export function parseErrorContext(error: unknown): ErrorContext {
       error: {
         name: error.name,
         message:
-          (error.response?.data as any)?.message ??
+          // detail
+          (error.response?.data as any)?.detail ??
           error.message ??
           "Erreur inconnue",
         status: error.response?.status ?? 500,

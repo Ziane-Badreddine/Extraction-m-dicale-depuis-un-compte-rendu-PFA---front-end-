@@ -51,17 +51,20 @@ export function LoginForm({
       }
     );
   }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <Logo size={45} />
-            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+            <h1 className="text-xl font-bold">Bienvenue chez Acme Inc.</h1>
             <FieldDescription>
-              Don&apos;t have an account? <Link href="/register">Register</Link>
+              Vous n’avez pas de compte ?{" "}
+              <Link href="/register">Créer un compte</Link>
             </FieldDescription>
           </div>
+
           <Controller
             name="email"
             control={form.control}
@@ -72,7 +75,7 @@ export function LoginForm({
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
-                  placeholder="m@example.com"
+                  placeholder="exemple@email.com"
                   autoComplete="off"
                   disabled={isSubmitting}
                 />
@@ -82,12 +85,13 @@ export function LoginForm({
               </Field>
             )}
           />
+
           <Controller
             name="password"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                <FieldLabel htmlFor={field.name}>Mot de passe</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -102,16 +106,19 @@ export function LoginForm({
               </Field>
             )}
           />
+
           <Field>
             <Button disabled={isSubmitting} type="submit">
-              {isSubmitting && <Spinner />} Login
+              {isSubmitting && <Spinner />} Se connecter
             </Button>
           </Field>
         </FieldGroup>
       </form>
+
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        En cliquant sur continuer, vous acceptez nos{" "}
+        <a href="#">Conditions d’utilisation</a> et notre{" "}
+        <a href="#">Politique de confidentialité</a>.
       </FieldDescription>
     </div>
   );

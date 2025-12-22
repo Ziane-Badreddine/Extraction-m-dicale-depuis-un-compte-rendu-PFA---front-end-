@@ -23,13 +23,14 @@ export default function Header() {
               scale: 1,
               transition: { delay: 0.2, duration: 0.2 },
             }}
+            className=" hidden md:block"
           >
             <Link href={"/login"}>
               <Button
                 variant={"outline"}
                 className=" cursor-pointer hover:rounded-none transition-all duration-300"
               >
-                login
+                Se connecter
               </Button>
             </Link>
           </motion.div>
@@ -44,7 +45,7 @@ export default function Header() {
             <Link href={"/register"}>
               <Button className=" cursor-pointer hover:rounded-none transition-all duration-300">
                 {" "}
-                register
+                Créer un compte
               </Button>
             </Link>
           </motion.div>
