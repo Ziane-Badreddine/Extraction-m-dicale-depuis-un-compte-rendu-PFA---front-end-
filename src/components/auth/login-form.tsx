@@ -15,6 +15,10 @@ import { loginSchema } from "@/schema/login-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "../shared/logo";
 import Link from "next/link";
+import { useAuth } from "@/store/auth";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Spinner } from "../ui/spinner";
 
 export function LoginForm({
   className,
@@ -28,10 +32,24 @@ export function LoginForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  const { login } = useAuth();
+  const router = useRouter();
+  const isSubmitting = form.formState.isSubmitting;
+
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    await login(
+      { ...values },
+      {
+        onSuccess: (ctx) => {
+          toast.success(ctx.data.message);
+          router.push("/login");
+        },
+        onError: (ctx) => {
+          console.log(ctx.error);
+          toast.error(ctx.error.message);
+        },
+      }
+    );
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -56,6 +74,7 @@ export function LoginForm({
                   aria-invalid={fieldState.invalid}
                   placeholder="m@example.com"
                   autoComplete="off"
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -75,6 +94,7 @@ export function LoginForm({
                   aria-invalid={fieldState.invalid}
                   autoComplete="off"
                   type="password"
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -83,7 +103,9 @@ export function LoginForm({
             )}
           />
           <Field>
-            <Button type="submit">Login</Button>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting && <Spinner />} Login
+            </Button>
           </Field>
         </FieldGroup>
       </form>

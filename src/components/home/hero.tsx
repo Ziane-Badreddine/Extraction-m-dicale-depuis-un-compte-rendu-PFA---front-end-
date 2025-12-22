@@ -85,7 +85,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { delay: 0.8, duration: 1 } }}
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_70%,var(--foreground),transparent_10%)] blur-3xl"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_70%,var(--accent),transparent_10%)] blur-3xl"
       ></motion.div>
     </section>
   );

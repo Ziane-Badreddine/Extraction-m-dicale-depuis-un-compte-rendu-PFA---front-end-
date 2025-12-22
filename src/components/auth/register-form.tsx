@@ -15,6 +15,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/schema/register-schema";
 import z from "zod";
 import { Controller, useForm } from "react-hook-form";
+import { useAuth } from "@/store/auth";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Spinner } from "../ui/spinner";
 
 export function RegisterForm({
   className,
@@ -29,10 +33,23 @@ export function RegisterForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  const { register } = useAuth();
+  const router = useRouter();
+  const isSubmitting = form.formState.isSubmitting;
+
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
+    await register(
+      { ...values },
+      {
+        onSuccess: (ctx) => {
+          toast.success(ctx.data.message);
+          router.push("/login");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+      }
+    );
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -57,6 +74,7 @@ export function RegisterForm({
                   aria-invalid={fieldState.invalid}
                   placeholder="jhon doe"
                   autoComplete="off"
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -76,6 +94,7 @@ export function RegisterForm({
                   aria-invalid={fieldState.invalid}
                   placeholder="m@example.com"
                   autoComplete="off"
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -95,6 +114,7 @@ export function RegisterForm({
                   aria-invalid={fieldState.invalid}
                   autoComplete="off"
                   type="password"
+                  disabled={isSubmitting}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -103,7 +123,9 @@ export function RegisterForm({
             )}
           />
           <Field>
-            <Button type="submit">Create Account</Button>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting && <Spinner />} Create Account
+            </Button>
           </Field>
         </FieldGroup>
       </form>
