@@ -1,3 +1,6 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import { FolderPlus, Library, MoreHorizontal } from "lucide-react";
 
 import {
@@ -14,6 +17,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
 import Link from "next/link";
 import { NavUser } from "./nav-user";
 import {
@@ -22,14 +26,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+
+import { Skeleton } from "@/components/ui/skeleton"; // ← ShadCN Skeleton
 import { cn } from "@/lib/utils";
 import { SearchButton } from "./SearchButton";
+import { privateApi } from "@/lib/axios";
+import { ReportsListResponse } from "@/types/data";
+import { usePathname } from "next/navigation";
+
+
+
+async function getReports() {
+  const res = await privateApi.get("/pdf-to-json/reports");
+  return res.data;
+}
 
 export function AppSidebar() {
+  const { data, isLoading } = useQuery<ReportsListResponse>({
+    queryKey: ["reports"],
+    queryFn: getReports,
+  });
+  const pathname = usePathname()
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <SidebarTrigger className="h-11" />
+        <SidebarTrigger className="h-11 hidden md:block" />
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip={"Nouveau rapport"} asChild>
@@ -43,11 +65,11 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SearchButton />
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip={"Bibliothèque"} asChild>
+          <SidebarMenuItem >
+            <SidebarMenuButton disabled={true} tooltip={"Bibliothèque"} asChild>
               <Link
                 className="flex items-center justify-start"
-                href={"/parser/library"}
+                href={"#"}
               >
                 <Library className="size-5" />
                 <span className="align-text-bottom">Bibliothèque</span>
@@ -56,48 +78,65 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Mes rapports</SidebarGroupLabel>
-          <SidebarGroupContent className="group-data-[collapsible=icon]:opacity-0  transition-[margin,opacity] duration-200 ease-linear">
+          <SidebarGroupContent className="group-data-[collapsible=icon]:opacity-0 transition-[margin,opacity] duration-200 ease-linear">
             <SidebarMenu>
-              {Array(42)
-                .fill(null)
-                .map((_, id) => (
-                  <SidebarMenuItem key={id} className="group/menu-item">
-                    <SidebarMenuButton asChild>
-                      <Link className="flex items-center" href={`/parser/${id}`}>
-                        <span>{id}</span>
-                      </Link>
-                    </SidebarMenuButton>
+              {isLoading
+                ? // Skeleton placeholders
+                  Array(10)
+                    .fill(0)
+                    .map((_, i) => (
+                      <SidebarMenuItem
+                        key={i}
+                        className="group/menu-item flex items-center gap-2 px-2 py-1"
+                      >
+                        <Skeleton className="h-5 w-full rounded-md" />
+                      </SidebarMenuItem>
+                    ))
+                : data?.reports?.map((report) => (
+                    <SidebarMenuItem
+                      key={report._id}
+                      className="group/menu-item"
+                    >
+                      <SidebarMenuButton isActive={"/parser/" + report._id  === pathname} asChild>
+                        <Link
+                          className="flex items-center"
+                          href={`/parser/${report._id}`}
+                        >
+                          <span>{report.filename || report._id}</span>
+                        </Link>
+                      </SidebarMenuButton>
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction className="group/menu-action cursor-pointer focus-visible:outline-none focus-visible:ring-0">
-                          <MoreHorizontal
-                            className={cn(
-                              "hidden",
-                              "group-hover/menu-item:block",
-                              "group-data-[state=open]/menu-action:block"
-                            )}
-                          />
-                        </SidebarMenuAction>
-                      </DropdownMenuTrigger>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuAction className="group/menu-action cursor-pointer focus-visible:outline-none focus-visible:ring-0">
+                            <MoreHorizontal
+                              className={cn(
+                                "hidden",
+                                "group-hover/menu-item:block",
+                                "group-data-[state=open]/menu-action:block"
+                              )}
+                            />
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
 
-                      <DropdownMenuContent side="right" align="start">
-                        <DropdownMenuItem>Edit Project</DropdownMenuItem>
-                        <DropdownMenuItem>Delete Project</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                ))}
+                        <DropdownMenuContent side="right" align="start">
+                          <DropdownMenuItem>Edit Report</DropdownMenuItem>
+                          <DropdownMenuItem>Delete Report</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </SidebarMenuItem>
+                  ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
-        <NavUser
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

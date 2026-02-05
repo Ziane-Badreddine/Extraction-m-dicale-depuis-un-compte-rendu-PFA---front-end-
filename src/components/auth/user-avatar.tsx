@@ -45,6 +45,7 @@ export default function UserAvatar() {
 
   const avatarFallback = user?.name?.[0]?.toUpperCase() ?? "?";
   const tooltipText = "Open user menu";
+  console.log(user?.id)
 
   return (
     <AnimatePresence mode="wait">

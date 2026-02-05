@@ -15,6 +15,9 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { parseErrorContext } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
+import { privateApi } from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import {  useQueryClient } from "@tanstack/react-query";
 
 export const uploadPdfSchema = z.object({
   file: z
@@ -45,6 +48,8 @@ export default function DropzonePdf() {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter()
+  const qeuryClient = useQueryClient();
 
   const disabled = !!pdfFile;
 
@@ -80,23 +85,26 @@ export default function DropzonePdf() {
 
     const formData = new FormData();
     formData.append("file", pdfFile);
-    formData.append("title", title);
 
     try {
       setLoading(true);
 
-      await axios.post("/api/parser/upload", formData, {
+      const {data} = await privateApi.post("/pdf-to-json/pdf-to-json", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      const reportId = data.report_id
+      await  qeuryClient.invalidateQueries({queryKey: ["reports"]})
+      router.push(`/parser/${reportId}`)
 
       // success → reset or redirect
       handleCancel();
     } catch (err) {
       const uploadError = parseErrorContext(err)
       setError(
-        uploadError.response?.data?.message || "Erreur lors de l’upload du PDF"
+        uploadError.error.message || "Erreur lors de l’upload du PDF"
       );
     } finally {
       setLoading(false);

@@ -16,7 +16,10 @@ interface AuthProviderProps {
  */
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { refreshUser, isInitializing } = useAuth();
+  const { refreshUser, isInitializing,accessToken } = useAuth();
+
+
+  console.log(accessToken)
 
   useLayoutEffect(() => {
     refreshUser();

@@ -4,6 +4,7 @@ import { modernAntiqua } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { QueryProvider } from "@/providers/query-client";
 
 export const metadata: Metadata = {
   title: {
@@ -42,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${modernAntiqua.className} antialiased`} suppressHydrationWarning>
+           <QueryProvider>
         <AuthProvider>
          <ThemeProvider
             attribute="class"
@@ -50,9 +52,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+        <Toaster richColors closeButton />
           </ThemeProvider>
         </AuthProvider>
-        <Toaster richColors closeButton />
+        </QueryProvider>
       </body>
     </html>
   );

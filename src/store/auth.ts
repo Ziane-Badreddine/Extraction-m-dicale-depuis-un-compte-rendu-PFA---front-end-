@@ -35,7 +35,7 @@ type AuthStore = {
 
 interface LoginResponse {
   message: string;
-  accessToken: string;
+  access_token: string;
   user: User;
 }
 
@@ -70,7 +70,7 @@ export const useAuth = create<AuthStore>((set, get) => ({
         password,
       });
 
-      const { accessToken, user } = res.data;
+      const { access_token: accessToken, user } = res.data;
 
       set({
         user,
@@ -168,7 +168,7 @@ export const useAuth = create<AuthStore>((set, get) => ({
     try {
       const res = await publicApi.post("/refresh");
 
-      const { accessToken, user } = res.data;
+      const { access_token: accessToken, user } = res.data;
 
       set({
         accessToken: accessToken,

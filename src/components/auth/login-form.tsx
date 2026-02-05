@@ -44,7 +44,7 @@ export function LoginForm({
          if(ctx.data.message){
            toast.success(ctx.data.message );
          }
-          router.push("/");
+          router.push("/parser");
         },
         onError: (ctx) => {
           console.log(ctx.error);
