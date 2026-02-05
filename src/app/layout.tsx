@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-client";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: {
@@ -42,19 +43,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${modernAntiqua.className} antialiased`} suppressHydrationWarning>
-           <QueryProvider>
-        <AuthProvider>
-         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-        <Toaster richColors closeButton />
-          </ThemeProvider>
-        </AuthProvider>
+      <body
+        className={`${modernAntiqua.className} antialiased`}
+        suppressHydrationWarning
+      >
+        <QueryProvider>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider>{children}</TooltipProvider>
+              <Toaster richColors closeButton />
+            </ThemeProvider>
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

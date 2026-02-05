@@ -90,14 +90,14 @@ export default function ViewExtracted({ id }: Props) {
       <TabsList className="flex w-full gap-2 mb-2 sticky top-14 z-50 border">
         <TabsTrigger
           value="full-text"
-          className="flex items-center gap-2 justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border"
+          className="flex items-center gap-2 justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground borde cursor-pointer"
         >
           <FileText className="h-4 w-4" />
           Full Text
         </TabsTrigger>
         <TabsTrigger
           value="json"
-          className="flex items-center gap-2 justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border"
+          className="flex items-center gap-2 justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border cursor-pointer"
         >
           <Code className="h-4 w-4" />
           Extracted JSON
@@ -114,15 +114,15 @@ export default function ViewExtracted({ id }: Props) {
             animate="animate"
             exit="exit"
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="w-full relative  "
+            className="w-full   "
           >
             <MovingBorder
               borderRadius="0.25rem"
               borderClassName="bg-primary"
-              className="bg-background  w-full relative h-full text-start "
+              className="bg-background  w-full  h-full text-start text-foreground "
               duration={4000}
             >
-              <pre className="whitespace-pre-wrap text-sm p-4 rounded   border w-full h-full ">
+              <pre className="whitespace-pre-wrap relative dark:border text-sm p-4 rounded z-100000000000    w-full h-full ">
                 {report.content}
               </pre>
             </MovingBorder>
@@ -139,38 +139,40 @@ export default function ViewExtracted({ id }: Props) {
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="w-full "
           >
-                        <MovingBorder
+            <MovingBorder
               borderRadius="0.25rem"
               borderClassName="bg-primary"
-              className="bg-background  w-full relative h-full text-start "
+              className="bg-background  w-full  h-full text-start "
               duration={4000}
               as={"div"}
             >
-                            <CodeBlock
-              data={code}
-              defaultValue={code[0].language}
-              className="rounded border relative group "
-            >
-              <CodeBlockCopyButton className="absolute hidden group-hover:flex top-2 right-2 z-50" />
-              <CodeBlockBody>
-                {(item) => (
-                  <CodeBlockItem
-                    lineNumbers={false}
-                    key={item.language}
-                    value={item.language}
-                  >
-                    <CodeBlockContent
-                      themes={{ light: "vitesse-light", dark: "vitesse-dark" }}
-                      language={item.language as BundledLanguage}
+              <CodeBlock
+                data={code}
+                defaultValue={code[0].language}
+                className="rounded dark:border  relative group "
+              >
+                <CodeBlockCopyButton className="absolute hidden group-hover:flex top-2 right-2 z-50" />
+                <CodeBlockBody>
+                  {(item) => (
+                    <CodeBlockItem
+                      lineNumbers={false}
+                      key={item.language}
+                      value={item.language}
                     >
-                      {item.code}
-                    </CodeBlockContent>
-                  </CodeBlockItem>
-                )}
-              </CodeBlockBody>
-            </CodeBlock>
+                      <CodeBlockContent
+                        themes={{
+                          light: "vitesse-light",
+                          dark: "vitesse-dark",
+                        }}
+                        language={item.language as BundledLanguage}
+                      >
+                        {item.code}
+                      </CodeBlockContent>
+                    </CodeBlockItem>
+                  )}
+                </CodeBlockBody>
+              </CodeBlock>
             </MovingBorder>
-
           </motion.div>
         )}
       </AnimatePresence>

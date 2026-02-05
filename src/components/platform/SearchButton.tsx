@@ -20,6 +20,7 @@ export function SearchButton() {
           setOpen(true);
           if (isMobile) toggleSidebar();
         }}
+        className="cursor-pointer"
       >
         <Search className="size-5" />
         <span>Rechercher</span>

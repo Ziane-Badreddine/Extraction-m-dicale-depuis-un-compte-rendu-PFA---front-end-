@@ -2,10 +2,13 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { FileText, CalendarDays, User, Building2, Info } from "lucide-react";
-import { Report, SingleReportResponse } from "@/types/data";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Download } from "lucide-react";
+import { SingleReportResponse } from "@/types/data";
 import { privateApi } from "@/lib/axios";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Skeleton } from "../ui/skeleton";
@@ -51,6 +54,21 @@ export default function Header({ id }: Props) {
   if (error || !data)
     return <p className="p-4 text-red-500">Erreur lors du chargement</p>;
 
+  const handleDownloadJson = () => {
+    if (!report.extracted_data) return;
+    const blob = new Blob([JSON.stringify(report.extracted_data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = report.filename.replace(/\.[^/.]+$/, "") + ".json"; // nom du fichier JSON
+    a.click();
+
+    // Libère l'URL
+    URL.revokeObjectURL(url);
+  };
+
   const { report } = data;
 
   return (
@@ -64,10 +82,22 @@ export default function Header({ id }: Props) {
       </div>
 
       {/* Right */}
-      <div className="flex flex-col gap-1 text-sm md:text-right">
-        <Button size={"icon"} variant={"ghost"}>
-          <Info />
-        </Button>
+      <div className="flex  gap-1 text-sm md:text-right">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size={"icon"}
+              variant={"outline"}
+              className="cursor-pointer"
+              onClick={handleDownloadJson}
+            >
+              <Download />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>download</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </header>
   );
