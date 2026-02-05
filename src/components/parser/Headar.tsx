@@ -13,6 +13,7 @@ import { privateApi } from "@/lib/axios";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const fetchReport = async (
   id: string,
@@ -33,6 +34,7 @@ export default function Header({ id }: Props) {
     queryKey: ["report", id],
     queryFn: () => fetchReport(id),
   });
+  const isMobile = useIsMobile()
 
   if (isLoading)
     return (
@@ -86,8 +88,8 @@ export default function Header({ id }: Props) {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              size={"icon"}
-              variant={"outline"}
+              size={isMobile ? "icon-sm" : "icon"}
+              variant={isMobile ? "ghost" : "outline"}
               className="cursor-pointer"
               onClick={handleDownloadJson}
             >

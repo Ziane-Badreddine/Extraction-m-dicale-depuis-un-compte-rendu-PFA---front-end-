@@ -51,7 +51,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <SidebarTrigger className="h-11 hidden md:block" />
+        <SidebarTrigger className=" hidden md:flex"  />
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip={"Nouveau rapport"} asChild>
@@ -109,7 +109,7 @@ export function AppSidebar() {
                           <span>{report.filename || report._id}</span>
                         </Link>
                       </SidebarMenuButton>
-
+{/* 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <SidebarMenuAction className="group/menu-action cursor-pointer focus-visible:outline-none focus-visible:ring-0">
@@ -127,7 +127,7 @@ export function AppSidebar() {
                           <DropdownMenuItem>Edit Report</DropdownMenuItem>
                           <DropdownMenuItem>Delete Report</DropdownMenuItem>
                         </DropdownMenuContent>
-                      </DropdownMenu>
+                      </DropdownMenu> */}
                     </SidebarMenuItem>
                   ))}
             </SidebarMenu>

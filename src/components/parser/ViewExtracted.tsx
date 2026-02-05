@@ -97,7 +97,7 @@ export default function ViewExtracted({ id }: Props) {
         </TabsTrigger>
         <TabsTrigger
           value="json"
-          className="flex items-center gap-2 justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border cursor-pointer"
+          className="flex items-center gap-2 justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground borde cursor-pointer"
         >
           <Code className="h-4 w-4" />
           Extracted JSON
